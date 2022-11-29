@@ -11,7 +11,6 @@ import Reg from './ridgeReg';
 import ridgeRegWeighted from './ridgeWeightedReg';
 import ridgeRegThreaded from './ridgeRegThreaded';
 import util from './util';
-import blink from 'blink-detection'
 
 const webgazer = {};
 webgazer.tracker = {};
@@ -1163,7 +1162,5 @@ webgazer.getVideoPreviewToCameraResolutionRatio = function() {
 webgazer.getStoredPoints = function() {
   return [xPast50, yPast50];
 }
-
-webgazer.blink = blink;
 
 export default webgazer;
