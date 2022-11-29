@@ -11,6 +11,7 @@ import Reg from './ridgeReg';
 import ridgeRegWeighted from './ridgeWeightedReg';
 import ridgeRegThreaded from './ridgeRegThreaded';
 import util from './util';
+import blink from './blink';
 
 const webgazer = {};
 webgazer.tracker = {};
