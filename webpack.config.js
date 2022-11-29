@@ -25,13 +25,14 @@ function createConfig(options) {
       rules: [
         {
           test: /\.mjs$/,
-          type: 'javascript/auto',
+          type: 'javascript/esm',
           exclude: /node_modules/
         }
       ]
     },
     optimization: {
-    	minimize: options.minified
+      // if using google extension manifest v3 set to true
+      minimize: options.minified
     },
     resolve: {
       extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"]
