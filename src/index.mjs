@@ -5,7 +5,7 @@ import '@tensorflow/tfjs';
 import 'regression';
 import params from './params';
 import './dom_util';
-import localforage from 'localforage';
+// import localforage from 'localforage';
 import TFFaceMesh from './facemesh';
 import Reg from './ridgeReg';
 import ridgeRegWeighted from './ridgeWeightedReg';
@@ -369,7 +369,7 @@ var clickListener = async function(event) {
   recordScreenPosition(event.clientX, event.clientY, eventTypes[0]); // eventType[0] === 'click'
 
   if (webgazer.params.saveDataAcrossSessions) {
-    // Each click stores the next data point into localforage.
+    // Each click stores the next data point into local storage.
     await setGlobalData();
 
     // // Debug line
@@ -419,14 +419,14 @@ var removeMouseEventListeners = function() {
  * Loads the global data and passes it to the regression model
  */
 async function loadGlobalData() {
-  // Get settings object from localforage
+  // Get settings object from local storage
   // [20200611 xk] still unsure what this does, maybe would be good for Kalman filter settings etc?
-  settings = await localforage.getItem(localstorageSettingsLabel);
-  settings = settings || defaults;
+  settings = await chrome.storage.local.get(localstorageSettingsLabel)
+  settings = settings[localstorageSettingsLabel] || defaults;
 
   // Get click data from localforage
-  var loadData = await localforage.getItem(localstorageDataLabel);
-  loadData = loadData || defaults;
+  let loadData = await chrome.storage.local.get(localstorageDataLabel)
+  loadData = loadData[localstorageDataLabel] || defaults;
 
   // Set global var data to newly loaded data
   data = loadData;
@@ -435,20 +435,18 @@ async function loadGlobalData() {
   for (var reg in regs) {
     regs[reg].setData(loadData);
   }
-
-  console.log("loaded stored data into regression model");
 }
 
 /**
- * Adds data to localforage
+ * Adds data to local storage
  */
-async function setGlobalData() {
+function setGlobalData() {
   // Grab data from regression model
   var storeData = regs[0].getData() || data; // Array
 
   // Store data into localforage
-  localforage.setItem(localstorageSettingsLabel, settings) // [20200605 XK] is 'settings' ever being used?
-  localforage.setItem(localstorageDataLabel, storeData);
+  chrome.storage.local.set({localstorageSettingsLabel: settings})
+  chrome.storage.local.set({localstorageDataLabel: storeData})
   //TODO data should probably be stored in webgazer object instead of each regression model
   //     -> requires duplication of data, but is likely easier on regression model implementors
 }
@@ -457,8 +455,9 @@ async function setGlobalData() {
  * Clears data from model and global storage
  */
 function clearData() {
-  // Removes data from localforage
-  localforage.clear();
+  // Removes data from local storage
+  chrome.storage.local.clear()
+  // localforage.clear();
 
   // Removes data from regression model
   for (var reg in regs) {
@@ -628,7 +627,7 @@ webgazer.begin = function(onFail) {
     alert("WebGazer works only over https. If you are doing local development, you need to run a local server.");
   }
 
-  // Load model data stored in localforage.
+  // Load model data stored in extension local storage.
   if (webgazer.params.saveDataAcrossSessions) {
     loadGlobalData();
   }
@@ -836,7 +835,7 @@ webgazer.showPredictionPoints = function(val) {
 };
 
 /**
- * Set whether previous calibration data (from localforage) should be loaded.
+ * Set whether previous calibration data (from local storage) should be loaded.
  * Default true.
  *
  * NOTE: Should be called before webgazer.begin() -- see www/js/main.js for example
@@ -1101,7 +1100,7 @@ webgazer.setVideoElementCanvas = function(canvas) {
 }
 
 /**
- * Clear data from localforage and from regs
+ * Clear data from local storage and from regs
  */
 webgazer.clearData = async function() {
   clearData();
