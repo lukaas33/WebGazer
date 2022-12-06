@@ -421,12 +421,12 @@ var removeMouseEventListeners = function() {
 async function loadGlobalData() {
   // Get settings object from local storage
   // [20200611 xk] still unsure what this does, maybe would be good for Kalman filter settings etc?
-  settings = await chrome.storage.local.get([localstorageSettingsLabel])
-  settings = settings || defaults;
+  settings = await chrome.storage.local.get(localstorageSettingsLabel)
+  settings = settings[localstorageSettingsLabel] || defaults;
 
   // Get click data from localforage
-  let loadData = await chrome.storage.local.get([localstorageDataLabel])
-  loadData = loadData || defaults;
+  let loadData = await chrome.storage.local.get(localstorageDataLabel)
+  loadData = loadData[localstorageDataLabel] || defaults;
 
   // Set global var data to newly loaded data
   data = loadData;
