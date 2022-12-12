@@ -331,7 +331,7 @@ async function loop() {
     }
 
     // requestAnimationFrame(loop);
-    window.setTimeout(loop, 1)
+    loop()
   }
 }
 
