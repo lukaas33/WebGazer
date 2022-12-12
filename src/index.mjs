@@ -245,7 +245,7 @@ async function getPrediction(regModelIndex) {
     return predictions[regModelIndex] === null ? null : {
       'x' : predictions[regModelIndex].x,
       'y' : predictions[regModelIndex].y,
-      // 'eyeFeatures': latestEyeFeatures
+      'eyeFeatures': latestEyeFeatures
     };
   } else {
     return predictions.length === 0 || predictions[0] === null ? null : {
@@ -364,7 +364,7 @@ var recordScreenPosition = function(x, y, eventType) {
  * Records click data and passes it to the regression model
  * @param {Event} event - The listened event
  */
-var clickListener = async function(event) {
+webgazer.clickListener = async function(event) {
   recordScreenPosition(event.clientX, event.clientY, eventTypes[0]); // eventType[0] === 'click'
 
   if (webgazer.params.saveDataAcrossSessions) {
@@ -400,7 +400,7 @@ var moveListener = function(event) {
 var addMouseEventListeners = function() {
   //third argument set to true so that we get event on 'capture' instead of 'bubbling'
   //this prevents a client using event.stopPropagation() preventing our access to the click
-  document.addEventListener('click', clickListener, true);
+  // document.addEventListener('click', clickListener, true);
   // document.addEventListener('mousemove', moveListener, true);
 };
 
@@ -410,8 +410,8 @@ var addMouseEventListeners = function() {
 var removeMouseEventListeners = function() {
   // must set third argument to same value used in addMouseEventListeners
   // for this to work.
-  document.removeEventListener('click', clickListener, true);
-  document.removeEventListener('mousemove', moveListener, true);
+  // document.removeEventListener('click', clickListener, true);
+  // document.removeEventListener('mousemove', moveListener, true);
 };
 
 /**
