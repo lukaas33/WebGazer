@@ -83,8 +83,6 @@ var defaults = {
 };
 
 
-//PRIVATE FUNCTIONS
-
 /**
  * Computes the size of the face overlay validation box depending on the size of the video preview window.
  * @returns {Object} The dimensions of the validation box as top, left, width, height.
@@ -247,7 +245,7 @@ async function getPrediction(regModelIndex) {
     return predictions[regModelIndex] === null ? null : {
       'x' : predictions[regModelIndex].x,
       'y' : predictions[regModelIndex].y,
-      'eyeFeatures': latestEyeFeatures
+      // 'eyeFeatures': latestEyeFeatures
     };
   } else {
     return predictions.length === 0 || predictions[0] === null ? null : {
@@ -326,13 +324,14 @@ async function loop() {
       // GazeDot
       if (webgazer.params.showGazeDot) {
         gazeDot.style.display = 'block';
+        gazeDot.style.transform = 'translate3d(' + pred.x + 'px,' + pred.y + 'px,0)';
       }
-      gazeDot.style.transform = 'translate3d(' + pred.x + 'px,' + pred.y + 'px,0)';
     } else {
       gazeDot.style.display = 'none';
     }
 
-    requestAnimationFrame(loop);
+    // requestAnimationFrame(loop);
+    window.setTimeout(loop, 1)
   }
 }
 
@@ -623,9 +622,9 @@ function setUserMediaVariable(){
  * @returns {*}
  */
 webgazer.begin = function(onFail) {
-  if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.chrome){
-    alert("WebGazer works only over https. If you are doing local development, you need to run a local server.");
-  }
+  // if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.chrome){
+  //   alert("WebGazer works only over https. If you are doing local development, you need to run a local server.");
+  // }
 
   // Load model data stored in extension local storage.
   if (webgazer.params.saveDataAcrossSessions) {
