@@ -330,8 +330,7 @@ async function loop() {
       gazeDot.style.display = 'none';
     }
 
-    // requestAnimationFrame(loop);
-    loop()
+    requestAnimationFrame(loop);
   }
 }
 
