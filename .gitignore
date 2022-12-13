@@ -46,4 +46,3 @@ dist/tensorflow.js
 dist/tensorflow.commonjs2.js
 www/trainingData/*.png
 www/trainingData/*.db
-www
